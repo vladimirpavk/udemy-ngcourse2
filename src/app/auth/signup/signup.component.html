@@ -1,6 +1,6 @@
 <div class="signup-form">
 
-  <form fxLayout="column" fxLayoutAlign="center center" (ngSubmit)="onFormSubmit(f)" #f="ngForm" #fElemRef>
+  <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" (ngSubmit)="onFormSubmit(f)" #f="ngForm" #fElemRef>
 
     <mat-form-field>
       <input matInput placeholder="Enter email" type="email" name="emailInput" required email ngModel #emailInput="ngModel">
@@ -10,20 +10,22 @@
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput placeholder="Enter password" type="password" name="passwordInput" required minlength="10" ngModel #passwordInput="ngModel">
+      <input matInput placeholder="Enter password" type="password" name="passwordInput" required minlength="6" ngModel #passwordInput="ngModel">
       <mat-hint>Password must be at least 6 characters long</mat-hint>
       <mat-error *ngIf="passwordInput.hasError('minlength') && !passwordInput.hasError('required')">Password is shorter than 6 characters</mat-error>
-      <!--<mat-error *ngIf="(+passwordInput.value?.length)>6 && !passwordInput.hasError('required')">Password is shorter than 6 characters</mat-error>-->
       <mat-error *ngIf="passwordInput.hasError('required')">Password is <strong>required</strong></mat-error>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput [matDatepicker]="picker" [max]="maxDate" placeholder="Choose a date">
+        <input matInput [matDatepicker]="picker" [max]="maxDate" placeholder="Choose a date" name="birthdate" ngModel required #birthdate="ngModel">
+        <mat-error *ngIf="birthdate.hasError('required')">Birth date is <strong>required</strong></mat-error>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit">Submit</button>
+    <mat-checkbox color="primary" name="agreed" ngModel required>Agree to Terms and Conditions</mat-checkbox>
+  
+    <button mat-raised-button color="primary" type="submit" [disabled]="f.invalid">Submit</button>
 
   </form>
 

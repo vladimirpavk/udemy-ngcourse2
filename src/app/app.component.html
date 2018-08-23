@@ -1,4 +1,28 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<!-- <button mat-button>Material Button</button>
-<mat-icon>home</mat-icon> -->
-<router-outlet></router-outlet>
+<mat-sidenav-container>
+    <mat-sidenav #sidenav>
+        <p>Sidenav</p>
+    </mat-sidenav>
+
+    <mat-sidenav-content>       
+        <mat-toolbar color="primary">
+            <button mat-icon-button (click)="sidenav.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <div><a routerLink="/">LOGO</a></div>
+            <div fxFlex fxLayout fxLayoutAlign="flex-end">
+                <ul fxLayout fxLayoutGap="10px" class="navigation-items">
+                    <li><a routerLink="/signup">Signup</a></li>
+                    <li><a routerLink="/login">Login</a></li>
+                    <li><a routerLink="/training">Training</a></li>
+                </ul>                  
+            </div>
+           
+        </mat-toolbar> 
+        
+
+
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>
+

@@ -11,7 +11,8 @@ const routes:Routes = [
     { path: '', component:WelcomeComponent },
     { path: 'login', component:LoginComponent },
     { path: 'training', component:TrainingComponent },
-    { path: 'signup', component:SignupComponent }
+    { path: 'signup', component:SignupComponent },
+    { path: '**', redirectTo: ''}
 ];
 
 @NgModule({

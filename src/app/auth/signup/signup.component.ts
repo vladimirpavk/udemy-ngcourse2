@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-signup',
@@ -9,7 +9,8 @@ import { NgForm } from '@angular/forms';
 export class SignupComponent implements OnInit {
   
   private maxDate:Date;
-  
+  @ViewChild("passwordInput") pass:NgModel;
+
   constructor() { }
 
   ngOnInit() {
@@ -19,7 +20,7 @@ export class SignupComponent implements OnInit {
   }
 
   private onFormSubmit(f:NgForm){
-    console.log(f);
+    console.log(f);  
   }
 
 }
