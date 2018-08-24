@@ -1,0 +1,12 @@
+.nav-caption{
+    padding-left: 6px;
+}
+
+a{
+    text-decoration: none;
+    color:white;
+}
+
+a:active{
+    color: lightgray;
+}
