@@ -17,6 +17,7 @@ import { PastTrainingsComponent } from './training/past-trainings/past-trainings
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
+import { CancelTrainingComponent } from './training/current-training/cancel-training/cancel-training.component';
 
 
 
@@ -32,6 +33,10 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
     WelcomeComponent,
     HeaderComponent,
     SidenavListComponent,
+    CancelTrainingComponent,
+  ],
+  entryComponents: [
+    CancelTrainingComponent
   ],
   imports: [
     BrowserModule,

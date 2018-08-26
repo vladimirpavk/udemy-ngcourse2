@@ -1,4 +1,6 @@
 import { Output, Component, OnInit, EventEmitter } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { CancelTrainingComponent } from './cancel-training/cancel-training.component';
 
 @Component({
   selector: 'app-current-training',
@@ -12,19 +14,20 @@ export class CurrentTrainingComponent implements OnInit {
   @Output() 
   public nextExercise:EventEmitter<void>=new EventEmitter<void>();
 
-  constructor() { }
+  constructor(private cancelDialog:MatDialog) { }
 
   ngOnInit() {
     this.intervalHandler=setInterval(()=>{
       this.currentTrainingProgress=this.currentTrainingProgress+10;
-      if(this.currentTrainingProgress>100){
+      if(this.currentTrainingProgress>=100){
         clearInterval(this.intervalHandler);
       }
     },500);
   }
 
   private stopExercise(){
-    clearInterval(this.intervalHandler);
+    //clearInterval(this.intervalHandler);
+    const cancelDialogRef:MatDialogRef<CancelTrainingComponent> = this.cancelDialog.open(CancelTrainingComponent);
   }
 
   private goToNext(){
