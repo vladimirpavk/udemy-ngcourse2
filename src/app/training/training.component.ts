@@ -8,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 export class TrainingComponent implements OnInit {
 
   public isTrainingStarted=false;
+  public trainingName:string;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  private trainingStarted(trainingName:string):void{
+    this.trainingName = trainingName;    
+    this.isTrainingStarted = true;    
   }
 }

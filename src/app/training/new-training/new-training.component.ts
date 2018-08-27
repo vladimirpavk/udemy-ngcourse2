@@ -1,4 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { MatSelect } from '@angular/material';
 
 @Component({
   selector: 'app-new-training',
@@ -7,17 +8,16 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class NewTrainingComponent implements OnInit {
 
-  @Output()
-  public trainingStarted:EventEmitter<void> = new EventEmitter();
+  @Output("trainingStarted")  public trainingStarted:EventEmitter<string> = new EventEmitter<string>();
+  @ViewChild("trainingSelect") select: MatSelect;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  startExercise(){
-    //console.log("Start exercise...");
-    this.trainingStarted.emit();
+  startExercise(){   
+    this.trainingStarted.emit(this.select.value);
   }
 
 }
