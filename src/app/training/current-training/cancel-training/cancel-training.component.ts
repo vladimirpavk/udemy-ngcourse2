@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { ExerciseData } from "../current-training.component";
 
 @Component({
   selector: 'app-cancel-training',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CancelTrainingComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public dialogRef: MatDialogRef<CancelTrainingComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ExerciseData) {}
 
-  ngOnInit() {
+  ngOnInit() { 
+  }
+
+  actionButtonClicked(action:string){
+    this.dialogRef.close(action);
   }
 
 }
