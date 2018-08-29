@@ -6,15 +6,11 @@
         <mat-card-content>          
             <mat-form-field fxLayoutAlign="center">
                 <mat-select placeholder="Select type of training" #trainingSelect>
-                  <mat-option value="easy">
-                    Easy
-                  </mat-option>
-                  <mat-option value="medium">
-                    Medium
-                  </mat-option>
-                  <mat-option value="hard">
-                    Hard
-                  </mat-option>
+                  <mat-option 
+                    *ngFor="let exercies of trainingService.getExercises(); let i=index"
+                    value="exercies.id">
+                    {{ exercies.name }}
+                  </mat-option>               
                 </mat-select>
               </mat-form-field>          
             </mat-card-content>
