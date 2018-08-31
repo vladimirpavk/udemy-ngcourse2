@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Exercise } from './exercise.model';
 
 @Component({
   selector: 'app-training',
@@ -15,8 +16,8 @@ export class TrainingComponent implements OnInit {
   ngOnInit() {
   }
 
-  private trainingStarted(trainingName:string):void{
-    this.trainingName = trainingName;    
+  private trainingStarted(exercise:Exercise):void{
+    this.trainingName = exercise.name;
     this.isTrainingStarted = true;    
   }
 }

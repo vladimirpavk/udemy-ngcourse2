@@ -18,7 +18,8 @@ export class NewTrainingComponent implements OnInit {
   }
 
   startExercise(){   
-    //this.trainingStarted.emit(this.select.value);
+    console.log(this.select.value);
+    this.trainingStarted.emit(this.select.value);
   }
 
 }

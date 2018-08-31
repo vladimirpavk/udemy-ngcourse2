@@ -8,7 +8,7 @@
                 <mat-select placeholder="Select type of training" #trainingSelect>
                   <mat-option 
                     *ngFor="let exercies of trainingService.getExercises(); let i=index"
-                    value="exercies.id">
+                    [value]="exercies">
                     {{ exercies.name }}
                   </mat-option>               
                 </mat-select>
