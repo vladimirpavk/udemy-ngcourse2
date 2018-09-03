@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatSelect } from '@angular/material';
 import { TrainingService } from '../training.service';
+import { Exercise } from '../exercise.model';
 
 @Component({
   selector: 'app-new-training',
@@ -18,8 +19,10 @@ export class NewTrainingComponent implements OnInit {
   }
 
   startExercise(){   
-    console.log(this.select.value);
-    this.trainingStarted.emit(this.select.value);
+    /*console.log(this.select.value);    
+    this.trainingStarted.emit(this.select.value);*/
+
+    this.trainingService.startTraining(<Exercise>this.select.value);
   }
 
 }
