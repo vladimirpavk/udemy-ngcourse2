@@ -1,6 +1,6 @@
 <div fxLayout="column" fxLayoutAlign="center center" style="margin-top:30px; padding:30px;">
     <mat-progress-spinner mode="determinate" [value]="currentTrainingProgress"></mat-progress-spinner>
     <h1 color="primary" style="margin-top:30px;">{{currentTrainingProgress}}%</h1>
-    <button mat-raised-button color="primary" (click)="stopExercise()" *ngIf="currentTrainingProgress<100">Stop exercising</button>
+    <button mat-raised-button color="accent" (click)="stopExercise()" *ngIf="currentTrainingProgress<100">Stop exercising</button>
     <button mat-raised-button color="primary" (click)="goToNext()" *ngIf="currentTrainingProgress>=100">Go to next exercise</button>
   </div>

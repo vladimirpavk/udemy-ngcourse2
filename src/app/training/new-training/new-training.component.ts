@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/cor
 import { MatSelect } from '@angular/material';
 import { TrainingService } from '../training.service';
 import { Exercise } from '../exercise.model';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-new-training',
@@ -10,19 +11,16 @@ import { Exercise } from '../exercise.model';
 })
 export class NewTrainingComponent implements OnInit {
 
-  @Output("trainingStarted")  public trainingStarted:EventEmitter<string> = new EventEmitter<string>();
-  @ViewChild("trainingSelect") select: MatSelect;
+  @Output("trainingStarted")  public trainingStarted:EventEmitter<string> = new EventEmitter<string>();  
 
   constructor(private trainingService:TrainingService) { }
 
   ngOnInit() {    
   }
 
-  startExercise(){   
-    /*console.log(this.select.value);    
-    this.trainingStarted.emit(this.select.value);*/
-
-    this.trainingService.startTraining(<Exercise>this.select.value);
+  startExercise(form:NgForm){   
+     this.trainingService.startTraining(<Exercise>(form.controls["selectExercise"].value));
+     //console.log(form);
   }
 
 }

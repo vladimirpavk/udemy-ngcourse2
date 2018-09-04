@@ -1,22 +1,25 @@
 <section fxLayout fxLayoutAlign="center" class="new-training">
+  <form (ngSubmit)="startExercise(forma)" #forma="ngForm">
     <mat-card fxFlex.xs="100%" fxFlex="400px" fxLayout="column">
-        <mat-card-title fxLayoutAlign="center">
-          Time to start workout!
-        </mat-card-title>
-        <mat-card-content>          
-            <mat-form-field fxLayoutAlign="center">
-                <mat-select placeholder="Select type of training" #trainingSelect>
-                  <mat-option 
-                    *ngFor="let exercies of trainingService.getExercises(); let i=index"
-                    [value]="exercies">
-                    {{ exercies.name }}
-                  </mat-option>               
-                </mat-select>
-              </mat-form-field>          
-            </mat-card-content>
-        <mat-card-actions fxLayoutAlign="center">
-          <button mat-raised-button color="primary" (click)="startExercise()" >Start</button>
-        </mat-card-actions>
-      </mat-card>
+      <mat-card-title fxLayoutAlign="center">
+        Time to start workout!
+      </mat-card-title>
+      <mat-card-content>          
+          <mat-form-field fxLayoutAlign="center">
+              <mat-select placeholder="Select type of training" name="selectExercise" ngModel required>
+                <mat-option 
+                  *ngFor="let exercies of trainingService.getExercises(); let i=index"
+                  [value]="exercies">
+                  {{ exercies.name }}
+                </mat-option>               
+              </mat-select>
+            </mat-form-field>          
+      </mat-card-content>
+      <mat-card-actions fxLayoutAlign="center">
+        <button mat-raised-button color="primary" type="submit" [disabled]="forma.invalid">Start</button>
+        <!-- {{ forma.invalid }}-->
+      </mat-card-actions>
+    </mat-card>
+  </form>  
 </section>
 
