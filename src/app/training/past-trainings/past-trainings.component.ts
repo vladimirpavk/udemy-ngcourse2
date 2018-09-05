@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
@@ -9,7 +9,7 @@ import { TrainingService } from '../training.service';
   templateUrl: './past-trainings.component.html',
   styleUrls: ['./past-trainings.component.css']
 })
-export class PastTrainingsComponent implements OnInit {
+export class PastTrainingsComponent implements OnInit, AfterViewInit {
 
   private displayedColumns:string[] = [
     'name',
@@ -18,6 +18,9 @@ export class PastTrainingsComponent implements OnInit {
     'date',
     'state'
   ];
+
+  @ViewChild(MatSort) private sort:MatSort;
+  @ViewChild("paginator") private paginator:MatPaginator;
 
   private dataSource : MatTableDataSource<Exercise> = 
     new MatTableDataSource<Exercise>();
@@ -28,6 +31,15 @@ export class PastTrainingsComponent implements OnInit {
 
   ngOnInit() {
     this.dataSource.data = this.trainingService.getCompletedOrCanceledExercises();
+  }
+
+  ngAfterViewInit(){
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  private doFiltering(filter:string):void{
+    this.dataSource.filter = filter.trim().toLocaleLowerCase();
   }
 
 }

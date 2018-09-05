@@ -8,7 +8,7 @@
           <mat-form-field fxLayoutAlign="center">
               <mat-select placeholder="Select type of training" name="selectExercise" ngModel required>
                 <mat-option 
-                  *ngFor="let exercies of trainingService.getExercises(); let i=index"
+                  *ngFor="let exercies of (availableExercies | async); let i=index"
                   [value]="exercies">
                   {{ exercies.name }}
                 </mat-option>               

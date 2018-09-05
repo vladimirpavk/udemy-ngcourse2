@@ -1,29 +1,33 @@
+<mat-form-field>
+  <input matInput type="text" placeholder="Enter filter" (keyup)="doFiltering($event.target.value)">
+</mat-form-field>
 <table 
   mat-table
-  [dataSource]="dataSource" style="width:100%;">
+  [dataSource]="dataSource" style="width:100%;"
+  matSort>
 
   <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef><strong>Date</strong></th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header><strong>Date</strong></th>
       <td mat-cell *matCellDef="let element"> {{element.date | date}} </td>    
   </ng-container>
 
   <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef><strong>Name</strong></th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header><strong>Name</strong></th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
   </ng-container>
 
   <ng-container matColumnDef="calories">
-      <th mat-header-cell *matHeaderCellDef><strong>Calories</strong></th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header><strong>Calories</strong></th>
       <td mat-cell *matCellDef="let element"> {{element.calories | number}} </td>
   </ng-container>
   
   <ng-container matColumnDef="duration">
-      <th mat-header-cell *matHeaderCellDef><strong>Duration</strong></th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header><strong>Duration</strong></th>
       <td mat-cell *matCellDef="let element"> {{element.duration | number}} </td>
   </ng-container>
 
   <ng-container matColumnDef="state">
-      <th mat-header-cell *matHeaderCellDef><strong>State</strong></th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header><strong>State</strong></th>
       <td mat-cell *matCellDef="let element"> {{element.state}} </td>
   </ng-container>
 
@@ -31,3 +35,6 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
 </table>
+
+<mat-paginator [pageSize]="1" [pageSizeOptions]="[1, 5, 10, 20]" showFirstLastButtons #paginator></mat-paginator>
+
