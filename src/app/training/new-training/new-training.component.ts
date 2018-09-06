@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatSelect } from '@angular/material';
 import { NgForm } from '@angular/forms';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { TrainingService } from '../training.service';
@@ -13,53 +12,31 @@ import { Exercise } from '../exercise.model';
   templateUrl: './new-training.component.html',
   styleUrls: ['./new-training.component.css']
 })
-export class NewTrainingComponent implements OnInit {
+export class NewTrainingComponent implements OnInit, OnDestroy {
 
   @Output("trainingStarted")  public trainingStarted:EventEmitter<string> = new EventEmitter<string>();  
-  private availableExercies:Observable<Exercise[]>;  
+  private availableExercies:Exercise[];
+  private availableExercisesChangedSubscription: Subscription;
 
   constructor(
-    private db:AngularFirestore,
     private trainingService:TrainingService
   ) { }
 
-  ngOnInit() {           
-        /*this.availableExercies = 
-          this.db.collection('availableExercises').snapshotChanges()
-            .pipe(
-              map((docArray)=>{
-                let exerciseArray:Exercise[] = [];
-                for(let doc of docArray){
-                  exerciseArray.push({
-                    id: doc.payload.doc.id,
-                    name: doc.payload.doc.data()['name'],
-                    duration: doc.payload.doc.data()['duration'],
-                    calories: doc.payload.doc.data()['calories']
-                  });
-                }               
-                return exerciseArray;
-              })      
-            );*/         
-            
-      //ili prethodno može i elegantnije da se napiše      
-          this.availableExercies = this.db.collection('availableExercises').snapshotChanges()
-            .pipe(
-              map((docArray)=>{
-                return docArray.map((doc)=>{
-                  return {
-                    id: doc.payload.doc.id,
-                    name: doc.payload.doc.data()['name'],
-                    duration: doc.payload.doc.data()['duration'],
-                    calories: doc.payload.doc.data()['calories']
-                  }
-                })
-              })      
-            );
+  ngOnInit() {                         
+    this.availableExercies = this.trainingService.getExercises();
+    this.availableExercisesChangedSubscription = this.trainingService.availableExercisesChanged.subscribe(
+      (ex:Exercise[])=>{      
+        this.availableExercies = ex;
+      }
+    )      
+  }
+
+  ngOnDestroy(){
+    this.availableExercisesChangedSubscription.unsubscribe();
   }
 
   startExercise(form:NgForm){   
-     this.trainingService.startTraining(<Exercise>(form.controls["selectExercise"].value));
-     //console.log(form);
+     this.trainingService.startTraining(<Exercise>(form.controls["selectExercise"].value));     
   }
 
 }

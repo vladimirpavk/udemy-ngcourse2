@@ -1,22 +1,52 @@
-import { Exercise } from "./exercise.model";
-import { EventEmitter } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Subject } from "rxjs";
-import { MockNgModuleResolver } from "@angular/compiler/testing";
+import { map, subscribeOn } from 'rxjs/operators';
 
+import { Exercise } from "./exercise.model";
+
+@Injectable()
 export class TrainingService{
 
     public trainingChanged:Subject<Exercise> = new Subject<Exercise>();
+    public availableExercisesChanged:Subject<Exercise[]> = new Subject<Exercise[]>();
 
     private availableExercises: Exercise[] = [        
         { id: 'crunches', name: 'Crunches', duration: 30, calories: 8 },
         { id: 'touch-toes', name: 'Touch Toes', duration: 180, calories: 15 },
         { id: 'side-lunges', name: 'Side Lunges', duration: 120, calories: 18 },
         { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }        
-    ];       
+    ];    
+
     public currentExercise:Exercise = null;
     private exercies:Exercise[] = [];
 
+    constructor(private db:AngularFirestore){}
+
+    public fetchExercises():void{                       
+        this.db.collection('availableExercises').snapshotChanges()
+        .pipe(
+          map((docArray)=>{
+            return docArray.map((doc)=>{
+              return {
+                id: doc.payload.doc['id'],
+                name: doc.payload.doc.data()['name'],
+                duration: doc.payload.doc.data()['duration'],
+                calories: doc.payload.doc.data()['calories']
+              }
+            })
+          })      
+        )
+        .subscribe(
+            (exercies:Exercise[])=>{                
+                this.availableExercises = exercies;
+                this.availableExercisesChanged.next(this.availableExercises);
+            }
+        )       
+    }
+
     public getExercises():Exercise[]{
+        this.fetchExercises();
         return this.availableExercises;
     }
 
