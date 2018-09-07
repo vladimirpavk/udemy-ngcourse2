@@ -1,48 +1,73 @@
 import { Injectable } from '@angular/core';
+import { AngularFireAuth } from 'angularfire2/auth';
 import { Subject } from 'rxjs';
+import { MatSnackBar } from '@angular/material';
 
 import { User } from './user.model';
 import { AuthData } from './auth-data.model';
 import { Router } from '@angular/router';
+import { TrainingService } from '../training/training.service';
 
 @Injectable()
-export class AuthService{
-    private user:User;
-    public authChanged : Subject<boolean> = new Subject<boolean>();
+export class AuthService{    
+    public authChanged:Subject<boolean> = new Subject<boolean>();
+    private isAuthenticated:boolean=false;
 
-    constructor(private router:Router){}
+    constructor(
+        private router:Router,
+        private afAuth:AngularFireAuth,
+        private trainingService:TrainingService,
+        private snackbar:MatSnackBar
+    ){}
 
-    public registerUser(authData: AuthData):void{
-        this.user={
-            email: authData.email,
-            userId: (Math.random()*10000).toString()
-        }       
-        this.authChanged.next(true);
-        this.router.navigate(['/training']);
+    public initAfAuth(){
+        this.afAuth.authState.subscribe(
+            (result)=>{
+                if(result){
+                    //login successfull || signup successfull
+                    this.isAuthenticated=true;
+                    this.authChanged.next(this.isAuthenticated);
+                    this.router.navigate(['/training']);
+                }
+                else{
+                    this.trainingService.cancelSubs();
+                    this.afAuth.auth.signOut();
+                    this.isAuthenticated=false;     
+                    this.authChanged.next(this.isAuthenticated);
+                    this.router.navigate(['/login']);
+                }                
+            }
+        );
     }
 
-    public login(authData: AuthData):void{
-        this.user={
-            email: authData.email,
-            userId: (Math.random()*10000).toString()
-        }
-        this.authChanged.next(true);
-        this.router.navigate(['/training']);
+    public registerUser(authData: AuthData):void{          
+        this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
+            .catch(
+                (error)=>{
+                    this.snackbar.open(error.message, null, {
+                        duration:2000
+                    });
+                }
+            );
     }
 
-    public logout():void{
-        this.user=null;
-        this.authChanged.next(false);
-        this.router.navigate(['/login']);
+    public login(authData: AuthData):void{        
+        this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)
+            .catch(
+                (error)=>{
+                    this.snackbar.open(error.message, null, {
+                        duration:2000
+                    });
+                }
+            );
     }
 
-    public getUser():User{
-        console.log( { ...this.user } );
-        return { ...this.user };
+    public logout():void{                
+        this.afAuth.auth.signOut();        
     }
-
+ 
     public isAuth():boolean{        
-        return this.user!=null;
+        return this.isAuthenticated;
     }
 
 }

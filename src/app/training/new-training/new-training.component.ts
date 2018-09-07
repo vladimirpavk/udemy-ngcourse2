@@ -22,13 +22,13 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
     private trainingService:TrainingService
   ) { }
 
-  ngOnInit() {                         
-    this.availableExercies = this.trainingService.getExercises();
+  ngOnInit() { 
+    this.trainingService.fetchExercises();                            
     this.availableExercisesChangedSubscription = this.trainingService.availableExercisesChanged.subscribe(
-      (ex:Exercise[])=>{      
+      (ex:Exercise[])=>{           
         this.availableExercies = ex;
       }
-    )      
+    )              
   }
 
   ngOnDestroy(){
