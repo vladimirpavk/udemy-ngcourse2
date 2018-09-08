@@ -17,6 +17,7 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
   @Output("trainingStarted")  public trainingStarted:EventEmitter<string> = new EventEmitter<string>();  
   private availableExercies:Exercise[];
   private availableExercisesChangedSubscription: Subscription;
+  private isRequestSent=true;
 
   constructor(
     private trainingService:TrainingService
@@ -25,7 +26,8 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
   ngOnInit() { 
     this.trainingService.fetchExercises();                            
     this.availableExercisesChangedSubscription = this.trainingService.availableExercisesChanged.subscribe(
-      (ex:Exercise[])=>{           
+      (ex:Exercise[])=>{       
+        this.isRequestSent=false;    
         this.availableExercies = ex;
       }
     )              

@@ -16,8 +16,8 @@
       <mat-error *ngIf="loginForm.controls.password?.errors?.required">Password is <strong>required</strong></mat-error>
     </mat-form-field>  
   
-    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Submit</button>
-
+    <button *ngIf="!loginRequestSent" mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Submit</button>
+    <mat-spinner *ngIf="loginRequestSent"></mat-spinner>
   </form>
 
 </div>

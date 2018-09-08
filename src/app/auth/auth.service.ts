@@ -35,7 +35,7 @@ export class AuthService{
                     this.isAuthenticated=false;     
                     this.authChanged.next(this.isAuthenticated);
                     this.router.navigate(['/login']);
-                }                
+                }                               
             }
         );
     }
@@ -47,7 +47,8 @@ export class AuthService{
                     this.snackbar.open(error.message, null, {
                         duration:2000
                     });
-                }
+                    this.authChanged.next(false);
+                }                
             );
     }
 
@@ -58,7 +59,8 @@ export class AuthService{
                     this.snackbar.open(error.message, null, {
                         duration:2000
                     });
-                }
+                    this.authChanged.next(false);
+                }                
             );
     }
 

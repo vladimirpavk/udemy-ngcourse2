@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -7,9 +9,12 @@ import { AuthService } from '../auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   private loginForm:FormGroup;
+  private loginRequestSent = false;
+
+  private authChangedSubs:Subscription;
 
   constructor(private authService:AuthService) { }
 
@@ -19,15 +24,26 @@ export class LoginComponent implements OnInit {
         'email': new FormControl('', [Validators.email, Validators.required]),
         'password': new FormControl('', [Validators.minLength(6), Validators.maxLength(12), Validators.required])
       }
-    )
+    );
+
+    this.authChangedSubs = this.authService.authChanged.subscribe(
+      (authState:boolean)=>{        
+        this.loginRequestSent = false;
+      }
+    );
   }
 
-  private onFormSubmitted(){
-    //console.log(this.loginForm);
+  ngOnDestroy(){
+    this.authChangedSubs.unsubscribe();
+  }
+
+  private onFormSubmitted(){   
+    this.loginRequestSent = true;    
+
     this.authService.login({
       email: this.loginForm.value.email,
       password: this.loginForm.value.password
-    });
+    });    
   }
 
 }

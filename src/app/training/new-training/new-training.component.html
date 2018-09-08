@@ -5,7 +5,7 @@
         Time to start workout!
       </mat-card-title>
       <mat-card-content>          
-          <mat-form-field fxLayoutAlign="center">
+          <mat-form-field *ngIf="!isRequestSent" fxLayoutAlign="center">
               <mat-select placeholder="Select type of training" name="selectExercise" ngModel required>
                 <mat-option 
                   *ngFor="let exercies of availableExercies; let i=index"
@@ -13,9 +13,10 @@
                   {{ exercies.name }}
                 </mat-option>               
               </mat-select>
-            </mat-form-field>          
+          </mat-form-field> 
+          <mat-spinner *ngIf="isRequestSent" style="margin: auto;"></mat-spinner>         
       </mat-card-content>
-      <mat-card-actions fxLayoutAlign="center">
+      <mat-card-actions *ngIf="!isRequestSent" fxLayoutAlign="center">
         <button mat-raised-button color="primary" type="submit" [disabled]="forma.invalid">Start</button>
         <!-- {{ forma.invalid }}-->
       </mat-card-actions>
