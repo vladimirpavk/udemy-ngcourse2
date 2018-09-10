@@ -7,6 +7,8 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 
+import { StoreModule } from '@ngrx/store';
+
 import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -21,7 +23,8 @@ import { TrainingService } from './training/training.service';
 import { environment } from '../environments/environment';
 import { auth } from 'firebase';
 import { AuthModule } from './auth/auth.module';
-import { TrainingModule } from './training/training.module';
+
+import { appReducer } from './app.reducer';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,9 @@ import { TrainingModule } from './training/training.module';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AuthModule,
-    TrainingModule
+    StoreModule.forRoot({
+      appReducer : appReducer
+    })
   ],
   providers: [ AuthService, TrainingService ],
   bootstrap: [AppComponent]

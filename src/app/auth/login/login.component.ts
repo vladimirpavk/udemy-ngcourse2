@@ -4,6 +4,9 @@ import { Subscription } from 'rxjs';
 
 import { AuthService } from '../auth.service';
 
+import { Store } from '@ngrx/store';
+import * as appReducer from '../../app.reducer';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -16,7 +19,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private authChangedSubs:Subscription;
 
-  constructor(private authService:AuthService) { }
+  constructor(
+    private authService:AuthService,
+    private store:Store<appReducer.State['isLoading']>
+  ) { }
 
   ngOnInit() {
     this.loginForm=new FormGroup(
