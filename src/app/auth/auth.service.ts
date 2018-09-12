@@ -7,6 +7,8 @@ import { User } from './user.model';
 import { AuthData } from './auth-data.model';
 import { Router } from '@angular/router';
 import { TrainingService } from '../training/training.service';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../store/app.reducer';
 
 @Injectable()
 export class AuthService{    
@@ -17,7 +19,8 @@ export class AuthService{
         private router:Router,
         private afAuth:AngularFireAuth,
         private trainingService:TrainingService,
-        private snackbar:MatSnackBar
+        private snackbar:MatSnackBar,
+        private store:Store<fromApp.AppState>
     ){}
 
     public initAfAuth(){
@@ -26,6 +29,9 @@ export class AuthService{
                 if(result){
                     //login successfull || signup successfull
                     this.isAuthenticated=true;
+                    this.store.dispatch({
+                        type: 'STOP_LOADING'
+                    });                    
                     this.authChanged.next(this.isAuthenticated);
                     this.router.navigate(['/training']);
                 }
@@ -33,6 +39,9 @@ export class AuthService{
                     this.trainingService.cancelSubs();
                     this.afAuth.auth.signOut();
                     this.isAuthenticated=false;     
+                    this.store.dispatch({
+                        type: 'STOP_LOADING'
+                    });
                     this.authChanged.next(this.isAuthenticated);
                     this.router.navigate(['/login']);
                 }                               
@@ -52,13 +61,19 @@ export class AuthService{
             );
     }
 
-    public login(authData: AuthData):void{        
+    public login(authData: AuthData):void{
+        this.store.dispatch({
+            type: 'START_LOADING'
+        });
         this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)
             .catch(
                 (error)=>{
                     this.snackbar.open(error.message, null, {
                         duration:2000
-                    });
+                    });     
+                    this.store.dispatch({
+                        type: 'STOP_LOADING'
+                    });           
                     this.authChanged.next(false);
                 }                
             );
