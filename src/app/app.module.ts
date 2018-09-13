@@ -8,6 +8,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
@@ -43,7 +44,8 @@ import * as appReducer from './store/app.reducer';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AuthModule,
-    StoreModule.forRoot(appReducer.reducers)
+    StoreModule.forRoot(appReducer.reducers),
+    !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [ AuthService, TrainingService ],
   bootstrap: [AppComponent]

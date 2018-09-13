@@ -18,9 +18,7 @@ export class LoginComponent implements OnInit{
 
   private loginForm:FormGroup;
   private loginRequestSent$:Observable<AuthState> = this.store.select('authState');
-  //private loginRequestSent$:Observable<boolean>;
-  //private loginRequestSent:boolean;
-
+  
   constructor(
     private authService:AuthService,
     private store:Store<fromApp.AppState>
@@ -32,12 +30,7 @@ export class LoginComponent implements OnInit{
         'email': new FormControl('', [Validators.email, Validators.required]),
         'password': new FormControl('', [Validators.minLength(6), Validators.maxLength(12), Validators.required])
       }
-    );
-
-    /*this.loginRequestSent$ = this.store.pipe(
-      map(res=>res.firstReducer['isLoading'])
-    );*/
-    
+    );   
   }
 
   private onFormSubmitted(){   
