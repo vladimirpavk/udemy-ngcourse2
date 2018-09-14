@@ -7,7 +7,7 @@ import { AuthService } from '../auth.service';
 
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
-import { AuthState } from '../store/auth.reducer';
+import { UIState } from '../../store/ui/ui.reducer';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +17,7 @@ import { AuthState } from '../store/auth.reducer';
 export class LoginComponent implements OnInit{
 
   private loginForm:FormGroup;
-  private loginRequestSent$:Observable<AuthState> = this.store.select('authState');
+  private loginRequestSent$:Observable<UIState> = this.store.select('uiState');
   
   constructor(
     private authService:AuthService,

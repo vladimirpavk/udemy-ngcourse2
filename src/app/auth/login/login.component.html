@@ -16,8 +16,8 @@
       <mat-error *ngIf="loginForm.controls.password?.errors?.required">Password is <strong>required</strong></mat-error>
     </mat-form-field>  
   
-    <button *ngIf="!((loginRequestSent$ | async))?.isLoading" mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Submit</button>
-    <mat-spinner *ngIf="(loginRequestSent$ | async)?.isLoading"></mat-spinner>
+    <button *ngIf="!((loginRequestSent$ | async).isLoading)" mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Submit</button>
+    <mat-spinner *ngIf="(loginRequestSent$ | async).isLoading"></mat-spinner>
   </form>
 
 </div>

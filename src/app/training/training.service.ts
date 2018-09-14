@@ -5,6 +5,10 @@ import { map, subscribeOn } from 'rxjs/operators';
 
 import { Exercise } from "./exercise.model";
 
+import { Store } from '@ngrx/store';
+import * as fromUIActions from '../store/ui/ui.actions';
+import * as fromApp from '../store/app.reducer';
+
 @Injectable()
 export class TrainingService{
 
@@ -17,9 +21,13 @@ export class TrainingService{
     public currentExercise:Exercise = null;
 
    
-    constructor(private db:AngularFirestore){}
+    constructor(
+        private db:AngularFirestore,
+        private store:Store<fromApp.AppState>
+    ){}
 
-    public fetchExercises():void{                       
+    public fetchExercises():void{
+        this.store.dispatch(new fromUIActions.StartLoading());
         this.fbSubs.push(this.db.collection('availableExercises').snapshotChanges()
         .pipe(
           map((docArray)=>{
@@ -36,6 +44,7 @@ export class TrainingService{
         .subscribe(
             (exercies:Exercise[])=>{                 
                 this.availableExercisesChanged.next(exercies);
+                this.store.dispatch(new fromUIActions.StopLoading());
             }
         )); 
     }
