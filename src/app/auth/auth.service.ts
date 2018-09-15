@@ -14,8 +14,7 @@ import * as fromAuthActions from './store/auth.actions';
 import * as fromUIActions from '../store/ui/ui.actions';
 
 @Injectable()
-export class AuthService{    
-    public authChanged:Subject<boolean> = new Subject<boolean>();    
+export class AuthService{          
 
     constructor(
         private router:Router,
@@ -30,19 +29,18 @@ export class AuthService{
             (result)=>{
                 if(result){
                     //login successfull || signup successfull
-                    this.store.dispatch(new fromUIActions.StopLoading());
                     this.store.dispatch(new fromAuthActions.UserAuthenticated());                                                         
-
                     this.router.navigate(['/training']);
-                }
-                else{
-                    this.trainingService.cancelSubs();
-                    this.afAuth.auth.signOut();
 
-                    this.store.dispatch(new fromUIActions.StopLoading());
+                    this.store.dispatch(new fromUIActions.StopLoading());               
+                }
+                else{                   
                     this.store.dispatch(new fromAuthActions.UserNotAuthenticated());
-                   
+                    
+                    this.trainingService.cancelSubs();                    
                     this.router.navigate(['/login']);
+
+                    this.store.dispatch(new fromUIActions.StopLoading());            
                 }                               
             }
         );
@@ -59,9 +57,7 @@ export class AuthService{
                     });
                                         
                     this.store.dispatch(new fromUIActions.StopLoading());
-                    this.store.dispatch(new fromAuthActions.UserNotAuthenticated());
-
-                    this.authChanged.next(false);
+                    this.store.dispatch(new fromAuthActions.UserNotAuthenticated());                    
                 }                
             );
     }
@@ -69,23 +65,21 @@ export class AuthService{
     public login(authData: AuthData):void{
         this.store.dispatch(new fromUIActions.StartLoading());  
        
+        console.log(authData.email, authData.password);
         this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)
             .catch(
                 (error)=>{
                     this.snackbar.open(error.message, null, {
                         duration:2000
                     });     
-                    
                     this.store.dispatch(new fromUIActions.StopLoading());
                     this.store.dispatch(new fromAuthActions.UserNotAuthenticated());
-
-                    this.authChanged.next(false);
                 }                
             );
     }
 
-    public logout():void{     
-        console.log(this.afAuth.auth.signOut());        
+    public logout():void{      
+        this.afAuth.auth.signOut();
     }    
 
 }

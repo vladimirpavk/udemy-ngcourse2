@@ -1,40 +1,34 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatSelect } from '@angular/material';
 import { NgForm } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { TrainingService } from '../training.service';
 import { Exercise } from '../exercise.model';
+
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../store/app.reducer';
+import * as fromTraining from '../store/training.reducer';
 
 @Component({
   selector: 'app-new-training',
   templateUrl: './new-training.component.html',
   styleUrls: ['./new-training.component.css']
 })
-export class NewTrainingComponent implements OnInit, OnDestroy {
+export class NewTrainingComponent implements OnInit {
 
   @Output("trainingStarted")  public trainingStarted:EventEmitter<string> = new EventEmitter<string>();  
-  private availableExercies:Exercise[];
-  private availableExercisesChangedSubscription: Subscription;
-  private isRequestSent=true;
+ 
+  private availableExercises:Observable<fromTraining.TrainingState>=this.store.select('trainingState');
 
   constructor(
-    private trainingService:TrainingService
+    private trainingService:TrainingService,
+    private store:Store<fromApp.AppState>
   ) { }
 
   ngOnInit() { 
-    this.trainingService.fetchExercises();                            
-    this.availableExercisesChangedSubscription = this.trainingService.availableExercisesChanged.subscribe(
-      (ex:Exercise[])=>{       
-        this.isRequestSent=false;    
-        this.availableExercies = ex;
-      }
-    )              
-  }
-
-  ngOnDestroy(){
-    this.availableExercisesChangedSubscription.unsubscribe();
+    this.trainingService.fetchExercises();                              
   }
 
   startExercise(form:NgForm){   

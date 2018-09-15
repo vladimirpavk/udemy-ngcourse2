@@ -8,7 +8,7 @@
           <mat-form-field *ngIf="!isRequestSent" fxLayoutAlign="center">
               <mat-select placeholder="Select type of training" name="selectExercise" ngModel required>
                 <mat-option 
-                  *ngFor="let exercies of availableExercies; let i=index"
+                  *ngFor="let exercies of (availableExercises | async).availableExercies; let i=index"
                   [value]="exercies">
                   {{ exercies.name }}
                 </mat-option>               
@@ -17,8 +17,7 @@
           <mat-spinner *ngIf="isRequestSent" style="margin: auto;"></mat-spinner>         
       </mat-card-content>
       <mat-card-actions *ngIf="!isRequestSent" fxLayoutAlign="center">
-        <button mat-raised-button color="primary" type="submit" [disabled]="forma.invalid">Start</button>
-        <!-- {{ forma.invalid }}-->
+        <button mat-raised-button color="primary" type="submit" [disabled]="forma.invalid">Start</button>       
       </mat-card-actions>
     </mat-card>
   </form>  

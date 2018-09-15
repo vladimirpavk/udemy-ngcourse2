@@ -20,7 +20,6 @@ export function reducer(state:UIState=initialState,
             }           
             default:
             return state;
-        }
-        
+        }        
 }
 

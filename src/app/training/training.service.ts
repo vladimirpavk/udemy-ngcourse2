@@ -8,12 +8,12 @@ import { Exercise } from "./exercise.model";
 import { Store } from '@ngrx/store';
 import * as fromUIActions from '../store/ui/ui.actions';
 import * as fromApp from '../store/app.reducer';
+import * as fromTraining from './store/training.actions';
 
 @Injectable()
 export class TrainingService{
 
-    public trainingChanged:Subject<Exercise> = new Subject<Exercise>();
-    public availableExercisesChanged:Subject<Exercise[]> = new Subject<Exercise[]>();   
+    public trainingChanged:Subject<Exercise> = new Subject<Exercise>();       
     public finishedExercisesChanged: Subject<Exercise[]> = new Subject<Exercise[]>();
 
     private fbSubs:Subscription[] = [];
@@ -26,8 +26,7 @@ export class TrainingService{
         private store:Store<fromApp.AppState>
     ){}
 
-    public fetchExercises():void{
-        this.store.dispatch(new fromUIActions.StartLoading());
+    public fetchExercises():void{             
         this.fbSubs.push(this.db.collection('availableExercises').snapshotChanges()
         .pipe(
           map((docArray)=>{
@@ -41,10 +40,9 @@ export class TrainingService{
             })
           })      
         )
-        .subscribe(
-            (exercies:Exercise[])=>{                 
-                this.availableExercisesChanged.next(exercies);
-                this.store.dispatch(new fromUIActions.StopLoading());
+        .subscribe(            
+            (exercies:Exercise[])=>{
+                this.store.dispatch(new fromTraining.AvailableExerciesFetched(exercies));;                            
             }
         )); 
     }
@@ -87,6 +85,7 @@ export class TrainingService{
         this.fbSubs.push(this.db.collection('finishedExercies').valueChanges()
         .subscribe(
             (exercises:Exercise[]) =>{
+                this.store.dispatch(new fromTraining.FinishedExerciesFetched(exercises));                
                 this.finishedExercisesChanged.next(exercises);
             }
         ));        

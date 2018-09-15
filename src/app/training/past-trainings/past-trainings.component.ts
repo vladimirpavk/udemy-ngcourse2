@@ -4,6 +4,9 @@ import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
 
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../store/app.reducer';
+
 @Component({
   selector: 'app-past-trainings',
   templateUrl: './past-trainings.component.html',
@@ -25,7 +28,10 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
   private dataSource : MatTableDataSource<Exercise> = 
     new MatTableDataSource<Exercise>();
 
-  constructor(private trainingService:TrainingService) {
+  constructor(
+    private trainingService:TrainingService,
+    private store:Store<fromApp.AppState>
+  ) {
 
    }
 
