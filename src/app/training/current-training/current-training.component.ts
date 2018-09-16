@@ -1,8 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
+import { map, tap, take } from 'rxjs/operators';
+
 import { CancelTrainingComponent } from './cancel-training/cancel-training.component';
 import { TrainingService } from '../training.service';
 import { Exercise } from '../exercise.model';
+
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../store/app.reducer';
+import * as fromTraining from '../store/training.reducer';
+import * as fromTrainingActions from '../store/training.actions';
 
 export interface ExerciseData{
   name:string,
@@ -20,18 +27,26 @@ export class CurrentTrainingComponent implements OnInit {
   private currentExercise:Exercise;
   private intervalHandler;
  
-  constructor(private cancelDialog:MatDialog,
-              private trainingService: TrainingService
+  constructor(
+    private cancelDialog:MatDialog,
+    private trainingService: TrainingService,
+    private store:Store<fromApp.AppState>
   ) { }
 
   ngOnInit() {    
-    this.currentExercise = this.trainingService.currentExercise;
+    this.store.select('trainingState').pipe(
+      map( (trState:fromTraining.TrainingState) => trState.activeExercise ),
+      take(1)
+    ).subscribe(
+      (activeExercise:Exercise)=>{
+        this.currentExercise = activeExercise;
+      }
+    )
     this.activateExercise();
   }
 
   private activateExercise(){
-    const step=this.currentExercise.duration/100*1000;
-    console.log(step);
+    const step=this.currentExercise.duration/100*1000;    
     this.intervalHandler=setInterval(()=>{
       this.currentTrainingProgress=this.currentTrainingProgress+1;
       if(this.currentTrainingProgress>=100){

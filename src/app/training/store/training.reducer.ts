@@ -3,12 +3,14 @@ import { Exercise } from '../exercise.model';
 
 export interface TrainingState{
     'availableExercies': Exercise[],
-    'finishedExercies': Exercise[]
+    'finishedExercies': Exercise[],
+    'activeExercise': Exercise
 }
 
 export const initialState:TrainingState={
     'availableExercies': [],
-    'finishedExercies': []
+    'finishedExercies': [],
+    'activeExercise': null
 }
 
 export function reducer(state:TrainingState=initialState, action:TrainingActions.TrainingActions):TrainingState{
@@ -19,6 +21,12 @@ export function reducer(state:TrainingState=initialState, action:TrainingActions
             }
             case(TrainingActions.FINISHED_EXERCIES_FETCHED):{
                 return {...state, 'finishedExercies': (<TrainingActions.FinishedExerciesFetched>action).finishedExercies };
+            }
+            case(TrainingActions.SET_ACTIVE_EXERCISE):{
+                return {...state, 'activeExercise': (<TrainingActions.SetActiveExercise>action).activeExercise}
+            }
+            case(TrainingActions.RESET_ACTIVE_EXERCISE):{
+                return {...state, 'activeExercise': null}
             }
             default:
                 return state;

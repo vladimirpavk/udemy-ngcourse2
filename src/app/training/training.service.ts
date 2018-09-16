@@ -1,25 +1,20 @@
 import { EventEmitter, Injectable } from "@angular/core";
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Subject, Subscription } from "rxjs";
-import { map, subscribeOn } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 import { Exercise } from "./exercise.model";
 
 import { Store } from '@ngrx/store';
 import * as fromUIActions from '../store/ui/ui.actions';
 import * as fromApp from '../store/app.reducer';
-import * as fromTraining from './store/training.actions';
+import * as fromTrainingActions from './store/training.actions';
+import * as fromTraining from './store/training.reducer';
 
 @Injectable()
 export class TrainingService{
 
-    public trainingChanged:Subject<Exercise> = new Subject<Exercise>();       
-    public finishedExercisesChanged: Subject<Exercise[]> = new Subject<Exercise[]>();
-
     private fbSubs:Subscription[] = [];
-
-    public currentExercise:Exercise = null;
-
    
     constructor(
         private db:AngularFirestore,
@@ -42,42 +37,60 @@ export class TrainingService{
         )
         .subscribe(            
             (exercies:Exercise[])=>{
-                this.store.dispatch(new fromTraining.AvailableExerciesFetched(exercies));;                            
+                this.store.dispatch(new fromTrainingActions.AvailableExerciesFetched(exercies));;                            
             }
         )); 
     }
 
     public startTraining(exercise:Exercise){
-        this.currentExercise = exercise;
-        this.trainingChanged.next({ ...exercise });
+        this.store.dispatch(new fromTrainingActions.SetActiveExercise(exercise));       
     }
 
-    public completeExercise():void{
+    private retrieveActiveExerciseFromStore():Exercise{
+        let currentExercise:Exercise = null;
+
+        this.store.select('trainingState').pipe(
+            map(
+                (trState:fromTraining.TrainingState)=>{
+                    return trState.activeExercise
+                }
+            ),
+            take(1)
+        ).subscribe(
+            (res:Exercise)=>{
+                currentExercise=res;
+            }
+        );
+
+        return currentExercise;
+    }
+
+    public completeExercise():void{        
         this.addExerciseToDb( 
             { 
-                ...this.currentExercise, 
+                ...this.retrieveActiveExerciseFromStore(), 
                 date:new Date(), 
                 state:'completed' 
             });
-        this.trainingChanged.next(null);
-        this.currentExercise = null;
+        
+        this.store.dispatch(new fromTrainingActions.ResetActiveExercise());
     }
 
     public cancelExercise(progress:number):void{
+        let currentExercise=this.retrieveActiveExerciseFromStore();
+        
         this.addExerciseToDb(
             {
-                ...this.currentExercise,
-                duration: this.currentExercise.duration * (progress/100),
-                calories: this.currentExercise.calories * (progress/100),
+                ...currentExercise,
+                duration: currentExercise.duration * (progress/100),
+                calories: currentExercise.calories * (progress/100),
                 date: new Date(),
                 state: 'canceled' 
             });
-        this.trainingChanged.next(null);
-        this.currentExercise = null;
+        this.store.dispatch(new fromTrainingActions.ResetActiveExercise());
     }
 
-    private addExerciseToDb(exercies:Exercise){
-        this.fetchFinishedExercises();
+    private addExerciseToDb(exercies:Exercise){        
         this.db.collection('finishedExercies').add(exercies);
     }
 
@@ -85,8 +98,7 @@ export class TrainingService{
         this.fbSubs.push(this.db.collection('finishedExercies').valueChanges()
         .subscribe(
             (exercises:Exercise[]) =>{
-                this.store.dispatch(new fromTraining.FinishedExerciesFetched(exercises));                
-                this.finishedExercisesChanged.next(exercises);
+                this.store.dispatch(new fromTrainingActions.FinishedExerciesFetched(exercises));                
             }
         ));        
     }

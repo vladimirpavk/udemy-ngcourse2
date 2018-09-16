@@ -10,6 +10,7 @@ import { Exercise } from '../exercise.model';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as fromTraining from '../store/training.reducer';
+import * as fromTrainingActions from '../store/training.actions';
 
 @Component({
   selector: 'app-new-training',
@@ -17,8 +18,6 @@ import * as fromTraining from '../store/training.reducer';
   styleUrls: ['./new-training.component.css']
 })
 export class NewTrainingComponent implements OnInit {
-
-  @Output("trainingStarted")  public trainingStarted:EventEmitter<string> = new EventEmitter<string>();  
  
   private availableExercises:Observable<fromTraining.TrainingState>=this.store.select('trainingState');
 
@@ -32,7 +31,9 @@ export class NewTrainingComponent implements OnInit {
   }
 
   startExercise(form:NgForm){   
-     this.trainingService.startTraining(<Exercise>(form.controls["selectExercise"].value));     
+    this.store.dispatch(new fromTrainingActions.SetActiveExercise( (<Exercise>(form.controls["selectExercise"].value)) ));
+
+    //this.trainingService.startTraining(<Exercise>(form.controls["selectExercise"].value));     
   }
 
 }
