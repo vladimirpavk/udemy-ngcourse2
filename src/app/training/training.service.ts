@@ -96,6 +96,9 @@ export class TrainingService{
 
     public fetchFinishedExercises():void{
         this.fbSubs.push(this.db.collection('finishedExercies').valueChanges()
+        .pipe(
+            take(1)
+        )
         .subscribe(
             (exercises:Exercise[]) =>{
                 this.store.dispatch(new fromTrainingActions.FinishedExerciesFetched(exercises));                
@@ -103,10 +106,7 @@ export class TrainingService{
         ));        
     }
 
-    public cancelSubs(){
-        /*for(let x of this.fbSubs){
-            x.unsubscribe();
-        }*/
+    public cancelSubs(){      
         this.fbSubs.forEach(
             (sub:Subscription)=>{
                 sub.unsubscribe();

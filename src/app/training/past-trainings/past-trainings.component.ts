@@ -9,6 +9,7 @@ import { TrainingService } from '../training.service';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as fromTraining from '../store/training.reducer';
+import { DataSource } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-past-trainings',
@@ -31,6 +32,8 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
   private dataSource : MatTableDataSource<Exercise> = 
     new MatTableDataSource<Exercise>();
 
+ // private dataSource:MyDataSource=new MyDataSource(this.store);
+
   constructor(
     private trainingService:TrainingService,
     private store:Store<fromApp.AppState>
@@ -39,16 +42,16 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit() {        
-    this.store.select('trainingState').pipe(
+    /*this.store.select('trainingState').pipe(
       map(
         (trState:fromTraining.TrainingState)=> trState.finishedExercies
       ))
       .subscribe(
         (exercies:Exercise[])=>{
           this.dataSource.data = exercies;
-        }
-        
-      )      
+        }        
+      );*/
+
     this.trainingService.fetchFinishedExercises();
   }
 
@@ -60,5 +63,23 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
   private doFiltering(filter:string):void{
     this.dataSource.filter = filter.trim().toLocaleLowerCase();
   }
-
 }
+
+/*export class MyDataSource extends DataSource<any>{
+  
+  constructor(
+    private store:Store<fromApp.AppState>
+  ){
+    super();
+  }
+
+  connect() : Observable<Exercise[]> {
+    return this.store.select('trainingState').pipe(
+      map(
+        (trState:fromTraining.TrainingState)=>trState.finishedExercies
+      ));    
+  }
+
+  disconnect() {}
+
+}*/
