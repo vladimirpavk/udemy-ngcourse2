@@ -9,6 +9,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
 
 import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
@@ -26,6 +27,7 @@ import { auth } from 'firebase';
 import { AuthModule } from './auth/auth.module';
 
 import * as appReducer from './store/app.reducer';
+import { AuthEffects } from './auth/store/auth.effects';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,7 @@ import * as appReducer from './store/app.reducer';
     AngularFireAuthModule,
     AuthModule,
     StoreModule.forRoot(appReducer.reducers),
+    EffectsModule.forRoot([AuthEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [ AuthService, TrainingService ],

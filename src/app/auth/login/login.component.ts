@@ -7,6 +7,7 @@ import { AuthService } from '../auth.service';
 
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
+import * as fromAuthActions from '../store/auth.actions';
 import { UIState } from '../../store/ui/ui.reducer';
 
 @Component({
@@ -34,10 +35,14 @@ export class LoginComponent implements OnInit{
   }
 
   private onFormSubmitted(){   
-    this.authService.login({
+    /*this.authService.login({
       email: this.loginForm.value.email,
       password: this.loginForm.value.password
-    });    
+    });*/    
+    this.store.dispatch(new fromAuthActions.LoginUser(
+      this.loginForm.value.email,
+      this.loginForm.value.password
+    ));
   }
 
 }
