@@ -15,9 +15,11 @@
       <mat-error *ngIf="loginForm.controls.password?.errors?.minlength && !loginForm.controls.password?.errors?.required">Password is shorter than 6 characters</mat-error>
       <mat-error *ngIf="loginForm.controls.password?.errors?.required">Password is <strong>required</strong></mat-error>
     </mat-form-field>  
+
+    <p *ngIf="( !(isAuthenticated$ | async) && (tryedToLogin$ | async) )" style="color:red;">Login failed. Please provide valid credentials.</p> 
   
-    <button *ngIf="!((loginRequestSent$ | async).isLoading)" mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Submit</button>
-    <mat-spinner *ngIf="(loginRequestSent$ | async).isLoading"></mat-spinner>
+    <button *ngIf="!(loginRequestSent$ | async)" mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Submit</button>
+    <mat-spinner *ngIf="loginRequestSent$ | async"></mat-spinner>
   </form>
 
 </div>

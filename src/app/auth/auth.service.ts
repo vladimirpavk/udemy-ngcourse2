@@ -36,7 +36,7 @@ export class AuthService{
                 }
                 else{                   
                     this.store.dispatch(new fromAuthActions.UserNotAuthenticated());
-                    
+                    this.store.dispatch(new fromAuthActions.NotTryedToLogin());
                     this.trainingService.cancelSubs();                    
                     this.router.navigate(['/login']);
 

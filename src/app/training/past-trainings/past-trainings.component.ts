@@ -42,7 +42,7 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit() {        
-    /*this.store.select('trainingState').pipe(
+    this.store.select('trainingState').pipe(
       map(
         (trState:fromTraining.TrainingState)=> trState.finishedExercies
       ))
@@ -50,7 +50,7 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
         (exercies:Exercise[])=>{
           this.dataSource.data = exercies;
         }        
-      );*/
+      );
 
     this.trainingService.fetchFinishedExercises();
   }

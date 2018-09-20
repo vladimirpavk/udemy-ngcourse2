@@ -1,4 +1,8 @@
 import { NgModule } from "@angular/core";
+import { StoreModule } from '@ngrx/store';
+
+import * as fromTrainingReducer from './store/training.reducer';
+
 import { CurrentTrainingComponent } from "./current-training/current-training.component";
 import { NewTrainingComponent } from "./new-training/new-training.component";
 import { PastTrainingsComponent } from "./past-trainings/past-trainings.component";
@@ -17,6 +21,7 @@ import { TrainingRoutingModule } from "./training-routing.module";
         PastTrainingsComponent       
     ],
     imports:[
+        StoreModule.forFeature('trainingState', fromTrainingReducer.reducer),
         SharedModule,
         TrainingRoutingModule
     ],

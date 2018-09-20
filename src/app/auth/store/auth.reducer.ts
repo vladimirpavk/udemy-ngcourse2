@@ -1,4 +1,5 @@
 import * as AuthActions from "./auth.actions";
+import { ActionReducerMap } from "@ngrx/store";
 
 
 export interface AuthState{
@@ -24,8 +25,10 @@ export function reducer(state:AuthState=initialState,
             case(AuthActions.TRYED_TO_LOGIN):{
                 return {...state, 'tryedToLogin':true}
             }
+            case(AuthActions.NOT_TRYED_TO_LOGIN):{
+                return {...state, 'tryedToLogin': false}
+            }
             default:
             return state;
         }
-
 }
