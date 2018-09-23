@@ -1,5 +1,6 @@
 import * as AuthActions from "./auth.actions";
-import { ActionReducerMap } from "@ngrx/store";
+import { ActionReducerMap, createSelector, createFeatureSelector } from "@ngrx/store";
+import { TrainingState } from "../../training/store/training.reducer";
 
 
 export interface AuthState{
@@ -32,3 +33,8 @@ export function reducer(state:AuthState=initialState,
             return state;
         }
 }
+
+export const getAuthState = createFeatureSelector<AuthState>('authState');
+
+export const getTryedToLogin = createSelector(getAuthState, (state:AuthState)=>state.tryedToLogin);
+export const getIsAuthenticated = createSelector(getAuthState, (state:AuthState)=>state.isAuthenticated);
