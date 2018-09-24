@@ -51,4 +51,29 @@ export class AuthEffects{
                 }
             )
         );
+
+        @Effect() public signupEffect:Observable<fromAuthActions.AuthActions> = 
+            this.actions.pipe(
+                ofType(fromAuthActions.SIGNUP_USER),
+                switchMap(
+                    (signupUser:fromAuthActions.SignupUser):Observable<fromAuthActions.AuthActions>=>{
+                        this.store.dispatch(new fromUIActions.StartLoading());
+                        return from(this.afAuth.auth.createUserWithEmailAndPassword(signupUser.email, signupUser.password))
+                        .pipe(
+                            switchMap(
+                                (user:any)=>{
+                                    this.store.dispatch(new fromUIActions.StopLoading());
+                                    return of(new fromAuthActions.SignupSuccess());                                    
+                                }
+                            ),
+                            catchError(
+                                (error:any)=>{
+                                    this.store.dispatch(new fromUIActions.StopLoading());                                                                        
+                                    return of(new fromAuthActions.SignupFailed(error.message));
+                                }
+                            )
+                        )
+                    }
+                )               
+            );
 }

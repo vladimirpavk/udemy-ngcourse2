@@ -24,9 +24,11 @@
     </mat-form-field>
 
     <mat-checkbox color="primary" name="agreed" ngModel required>Agree to Terms and Conditions</mat-checkbox>
-  
-    <button mat-raised-button *ngIf="!((loginRequestSent$ | async).isLoading)" color="primary" type="submit" [disabled]="f.invalid">Submit</button>
-    <mat-spinner *ngIf="(loginRequestSent$ | async).isLoading"></mat-spinner>
+    
+    <p *ngIf="(signupError$ | async)" style="color:red;">{{ (signupErrorMsg$ | async) }}</p>
+
+    <button mat-raised-button *ngIf="!(loginRequestSent$ | async)" color="primary" type="submit" [disabled]="f.invalid">Submit</button>
+    <mat-spinner *ngIf="loginRequestSent$ | async"></mat-spinner>
   </form>
 
 </div>
