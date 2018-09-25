@@ -22,8 +22,8 @@ export class SignupComponent implements OnInit {
   private signupErrorMsg$:Observable<string> = this.store.select(fromAuthReducer.getSignupErrorMsg);
 
   constructor(
-    private authService:AuthService,
-    private store:Store<fromApp.AppState>
+    private authService:AuthService,    
+    private store:Store<fromAuthReducer.AuthState>
   ) { }
 
   ngOnInit() {

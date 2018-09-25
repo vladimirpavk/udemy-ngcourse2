@@ -3,8 +3,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Observable } from 'rxjs';
 
 import { Store } from '@ngrx/store';
-import * as fromApp from '../../store/app.reducer';
-import { AuthState } from '../../auth/store/auth.reducer';
+import * as fromAuthReducer from '../../auth/store/auth.reducer';
 
 @Component({
   selector: 'app-header',
@@ -14,11 +13,11 @@ import { AuthState } from '../../auth/store/auth.reducer';
 export class HeaderComponent implements OnInit{
 
   @Output() public togleSidenv:EventEmitter<void>=new EventEmitter<void>();
-  private isAuth$:Observable<AuthState> = this.store.select('authState');
+  private isAuth$:Observable<boolean> = this.store.select(fromAuthReducer.getIsAuthenticated);
 
   constructor(
     private authService:AuthService,
-    private store:Store<fromApp.AppState>
+    private store:Store<fromAuthReducer.AuthState>
   ) { }
 
   ngOnInit() {
