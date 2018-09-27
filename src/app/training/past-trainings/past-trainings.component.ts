@@ -29,8 +29,8 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) private sort:MatSort;
   @ViewChild("paginator") private paginator:MatPaginator;
 
-  private dataSource : MatTableDataSource<Observable<Exercise>> = 
-    new MatTableDataSource<Observable<Exercise>>();
+  private dataSource : MatTableDataSource<Exercise> = 
+    new MatTableDataSource<Exercise>();
 
  // private dataSource:MyDataSource=new MyDataSource(this.store);
 
@@ -42,16 +42,16 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit() {        
-    this.dataSource.data = this.store.select('trainingState').pipe(
+    this.store.select('trainingState').pipe(
       map(
         (trState:fromTraining.TrainingState)=>trState.finishedExercies
       ))
-      /*.subscribe(
+      .subscribe(
         (exercies:Exercise[])=>{
           this.dataSource.data = exercies;
         }        
-      );*/
-
+      );
+    
     this.trainingService.fetchFinishedExercises();
   }
 
